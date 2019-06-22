@@ -1,6 +1,6 @@
 # lmds
 
-The **lmds** package implements local-multidimensional scaling [1] in C++ with an R wrapper and provides the quality metrics introduced in [2].
+The **lmds** package implements local-multidimensional scaling [1] in C++ with an R wrapper and provides the dimensionality reduction quality metrics mentioned in [2].
 
 To install the package, run the following
 ```R
