@@ -29,4 +29,5 @@ print(metric)
 
 # References
 [1] Chen, Lisha, and Andreas Buja. "Local multidimensional scaling for nonlinear dimension reduction, graph drawing, and proximity analysis." Journal of the American Statistical Association 104.485 (2009): 209-219.
+
 [2] *Coming soon*
