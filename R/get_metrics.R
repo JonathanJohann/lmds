@@ -1,11 +1,11 @@
-library(magic)
+
 get_knn_res <- function(X1,num_groups,group_sizes){
   groups <- list()
   for(i in 1:num_groups){
     tmp <- matrix(1,nrow=group_sizes,ncol=group_sizes)
     groups[[i]] <- tmp
   }
-  knn_mat <- Reduce(adiag,groups)
+  knn_mat <- magic::Reduce(adiag,groups)
   dist_mat <- dist(X1)
   rank_mat <- apply(dist_mat,1,rank)
   knn1 <- ifelse(rank_mat==2,1,0)
@@ -168,8 +168,6 @@ my_procrust_dist <- function(original,output,num_rotations = 10){
 
     distances <- c(distances,new_dist)
   }
-  #print(sort(distances))
-  #print(which.min(distances))
   return(min(distances))
 
 }
