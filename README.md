@@ -18,8 +18,8 @@ library(MASS)
 n = 500
 
 # Run LMDS
-X <- MASS::mvrnorm(n = n, mu = c(1,-1,1), Sigma = diag(3))
-Y <- lmds::lmds(X)
+X <- MASS::mvrnorm(n = n, mu = c(1,-1,1,-1), Sigma = diag(4))
+Y <- lmds::lmds(X, d = 2)
 print(Y$X)
 
 # Compare LMDS output with the original X
