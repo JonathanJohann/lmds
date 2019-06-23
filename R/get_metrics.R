@@ -1,4 +1,12 @@
 
+dist <- function(X)
+{
+  X2 <- apply (X, 1, function(z)sum(z^2))
+  dist2 <- outer(X2, X2, "+")- 2*X%*%t(X)
+  dist2 <- ifelse(dist2<0,0,dist2)
+  return (sqrt(dist2))
+}
+#' @export
 get_knn_res <- function(X1,num_groups,group_sizes){
   groups <- list()
   for(i in 1:num_groups){
@@ -12,16 +20,13 @@ get_knn_res <- function(X1,num_groups,group_sizes){
   percent <- sum(sum(knn1 * knn_mat))/as.numeric(num_groups*group_sizes)
   return(percent)
 }
-
+#' @export
 spearman_rho <- function(X1,X2){
-  n <- dim(X1)[1]
-  Do <- dist(X1)
-  Do2 <- dist(X2)
-  Daux <- as.vector(Do)
-  Daux2 <- as.vector(Do2)
-  sr <- stats::cor(Daux,Daux2,method="spearman")
-  return(sr)
+  stats::cor(as.vector(dist(X1)),
+             as.vector(dist(X2)),
+             method="spearman")
 }
+#' @export
 lcmc <- function(X1,X2,k){
   #'
   #'   X1 is the input matrix
@@ -38,17 +43,15 @@ lcmc <- function(X1,X2,k){
   percent.neighbors.same <- (sum(Inb*Inb2)-n)/(k*n) - k/(n-1)
   return(percent.neighbors.same)
 }
-
+#' @export
 kmax <- function(X1,X2){
-  n = dim(X1)
-  vals <- c()
-  for(i in 1:(n-1)){
-    val <- lcmc(X1,X2,i)
-    vals <- c(vals,val)
-  }
-  return(max(vals))
+  vals <- apply(matrix(c(1:(nrow(X1)-2)),
+                       nrow=1),
+                1,
+                function(x) lcmc(X1,X2,x))
+  max(vals)
 }
-
+#' @export
 qnx <- function(X1,X2,ks=NULL,kt=1){
   #'
   #'   X1 is the input matrix
@@ -79,18 +82,18 @@ qnx <- function(X1,X2,ks=NULL,kt=1){
   percent.neighbors.same <- (sum(Inb*Inb2*(wt+wtt)))/(2*ks*n)
   return(percent.neighbors.same)
 }
-
-range_kept <- function(X1,X2,k){
+#' @export
+spectral <- function(X,Y,k){
 
   #' Since we consistently want to see a spectrum of
   #' how many nearest neighbors are kept, the focus
   #' of this function is to capture 1 to k of the
   #' percent of nearest neighbors kept.
 
-  n <- dim(X1)[1]
+  n <- dim(X)[1]
 
-  distances1 <- dist(X1)
-  distances2 <- dist(X2)
+  distances1 <- dist(X)
+  distances2 <- dist(Y)
 
   rank1 <- apply(distances1,2,sort)
   rank2 <- apply(distances2,2,sort)
@@ -106,7 +109,7 @@ range_kept <- function(X1,X2,k){
   return(sum(kept))
 }
 
-
+#' @export
 local_error <- function(high,low){
   N = dim(high)[1]
   high_distances = dist(high)
@@ -124,7 +127,7 @@ local_error <- function(high,low){
   return(sum(cumsum(errors)))
 }
 
-
+#' @export
 entropy_and_mi <- function(X1,X2){
   n = dim(X1)[1]
   mat <- coRanking::coranking(dist(X1),dist(X2))
@@ -140,7 +143,7 @@ entropy_and_mi <- function(X1,X2){
                  "mutual_info"=MI)
   return(output)
 }
-
+#' @export
 my_procrust_dist <- function(original,output,num_rotations = 10){
   phis <- seq(0,2*pi,2*pi/num_rotations)
   distances <- c()
@@ -170,19 +173,4 @@ my_procrust_dist <- function(original,output,num_rotations = 10){
   }
   return(min(distances))
 
-}
-
-evaluate_output <- function(high,low){
-  n = dim(high)[1]
-  kmax_val <- kmax(high,low)
-  qnx_val <- qnx(high,low)
-  em <- entropy_and_mi(high,low)
-  h <- em$entropy
-  mi <- em$mutual_info
-  le <- local_error(high,low)
-  rk <- tryCatch({range_kept(high,low,n)},error=function(e){return(rankge_kept(high,low,(n-1)))})
-  spear <- spearman_rho(high,low)
-  knn1 <- get_knn_res(low,num_groups = 16,group_sizes = 50)
-  data_row <- matrix(c(kmax_val,qnx_val,h,mi,le,rk,spear,knn1),nrow=1)
-  return(data.frame(data_row))
 }
