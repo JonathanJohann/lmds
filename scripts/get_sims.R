@@ -13,7 +13,7 @@ double_X <- function(n=250){
   cbind(X,Y) %*% rotation_mat
 }
 
-generate_three_gaussians <- function(n=250){
+three_gaussians <- function(n=250){
   m <- ceiling(n/3)
   rbind(MASS::mvrnorm(m,mu=c(20,0),Sigma = 10*diag(2)),
         MASS::mvrnorm(m,mu=c(-10,0),Sigma = diag(2)),
