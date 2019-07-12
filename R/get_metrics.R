@@ -13,7 +13,7 @@ get_knn_res <- function(X1,num_groups,group_sizes){
     tmp <- matrix(1,nrow=group_sizes,ncol=group_sizes)
     groups[[i]] <- tmp
   }
-  knn_mat <- magic::Reduce(adiag,groups)
+  knn_mat <- Reduce(adiag,groups)
   dist_mat <- dist(X1)
   rank_mat <- apply(dist_mat,1,rank)
   knn1 <- ifelse(rank_mat==2,1,0)
@@ -34,12 +34,12 @@ lcmc <- function(X1,X2,k){
   #'   k is the number of neighbors to consider
   #'
   n <- dim(X1)[1]
-  Do <- dist(X1)
+  Do  <- dist(X1)
   Do2 <- dist(X2)
-  Daux <- apply(Do,2,sort)[k+1,]
+  Daux  <- apply(Do,2,sort)[k+1,]
   Daux2 <- apply(Do2,2,sort)[k+1,]
-  Inb <- ifelse(Do>Daux,0,1)
-  Inb2 <- ifelse(Do2>Daux2,0,1)
+  Inb  <- ifelse(Do>c(Daux),0,1)
+  Inb2 <- ifelse(Do2>c(Daux2),0,1)
   percent.neighbors.same <- (sum(Inb*Inb2)-n)/(k*n) - k/(n-1)
   return(percent.neighbors.same)
 }

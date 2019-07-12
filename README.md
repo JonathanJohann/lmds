@@ -30,4 +30,4 @@ print(metric)
 # References
 [1] Chen, Lisha, and Andreas Buja. "Local multidimensional scaling for nonlinear dimension reduction, graph drawing, and proximity analysis." Journal of the American Statistical Association 104.485 (2009): 209-219.
 
-[2] Johannemann, Jonathan, and Robert Tibshirani. "Spectral Overlap and a Comparison of Parameter-Free, Dimensionality Reduction Quality Metrics." arXiv preprint arXiv:1907.01974, 2019
+[2] *Coming soon*

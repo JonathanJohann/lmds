@@ -160,7 +160,7 @@ mat mds_c(mat X,int dim = 2){
 
 
 // [[Rcpp::export]]
-Rcpp::List localMDS_c(arma::mat X, Rcpp::Nullable<arma::mat> X1_temp = R_NilValue, int random_start = 0, float k = 6.0, float d = 2.0, float lambda = 1.0,
+Rcpp::List lmds(arma::mat X, Rcpp::Nullable<arma::mat> X1_temp = R_NilValue, int random_start = 0, float k = 6.0, float d = 2.0, float lambda = 1.0,
               float mu = 1.0, float nu = 0.0, float tau = 1.0, int niter = 500){
     std::list<float> stress;
     Rcpp::List ret;

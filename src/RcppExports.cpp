@@ -6,9 +6,9 @@
 
 using namespace Rcpp;
 
-// localMDS_c
-Rcpp::List localMDS_c(arma::mat X, Rcpp::Nullable<arma::mat> X1_temp, int random_start, float k, float d, float lambda, float mu, float nu, float tau, int niter);
-RcppExport SEXP _lmds_localMDS_c(SEXP XSEXP, SEXP X1_tempSEXP, SEXP random_startSEXP, SEXP kSEXP, SEXP dSEXP, SEXP lambdaSEXP, SEXP muSEXP, SEXP nuSEXP, SEXP tauSEXP, SEXP niterSEXP) {
+// lmds
+Rcpp::List lmds(arma::mat X, Rcpp::Nullable<arma::mat> X1_temp, int random_start, float k, float d, float lambda, float mu, float nu, float tau, int niter);
+RcppExport SEXP _lmds_lmds(SEXP XSEXP, SEXP X1_tempSEXP, SEXP random_startSEXP, SEXP kSEXP, SEXP dSEXP, SEXP lambdaSEXP, SEXP muSEXP, SEXP nuSEXP, SEXP tauSEXP, SEXP niterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -22,13 +22,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< float >::type nu(nuSEXP);
     Rcpp::traits::input_parameter< float >::type tau(tauSEXP);
     Rcpp::traits::input_parameter< int >::type niter(niterSEXP);
-    rcpp_result_gen = Rcpp::wrap(localMDS_c(X, X1_temp, random_start, k, d, lambda, mu, nu, tau, niter));
+    rcpp_result_gen = Rcpp::wrap(lmds(X, X1_temp, random_start, k, d, lambda, mu, nu, tau, niter));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_lmds_localMDS_c", (DL_FUNC) &_lmds_localMDS_c, 10},
+    {"_lmds_lmds", (DL_FUNC) &_lmds_lmds, 10},
     {NULL, NULL, 0}
 };
 

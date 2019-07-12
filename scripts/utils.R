@@ -3,16 +3,16 @@
 simulate <- function(method,dataset,seed=123123,data_seed=123123){
   if(method=="Sammon") {
     X <- get_data(dataset=dataset,seed=data_seed)
-    Y <- stats::sammon(dist(X))$points
-    results <- evaluate(X,Y)
+    Y <- MASS::sammon(dist(X))$points
+    results <- evaluate_output(X,Y)
     return(results)
   } else if(method == "lmds") {
     X <- get_data(dataset=dataset,seed=data_seed)
     grid <- get_grid(method=method,dataset=dataset)
     results <- c()
     for(i in 1:dim(grid)[1]){
-      Y <- lmds(X=X,k=grid[i,]$k,tau=grid[i,]$tau)$X
-      results <- rbind(results,cbind(grid[i,],evaluate(X,Y)))
+      Y <- lmds::lmds(X=X,k=grid[i,]$k,tau=grid[i,]$tau)$X
+      results <- rbind(results,cbind(grid[i,],evaluate_output(X,Y)))
       print(paste0("Finished -- ",100.0*i/dim(grid)[1]))
     }
     return(results)
@@ -26,7 +26,7 @@ simulate <- function(method,dataset,seed=123123,data_seed=123123){
       custom.settings$local_connectivity=grid[i,]$local_connectivity
       custom.settings$bandwidth=grid[i,]$bandwidth
       Y <- umap(X,custom.settings)$layout
-      results <- rbind(results,cbind(grid[i,],evaluate(X,Y)))
+      results <- rbind(results,cbind(grid[i,],evaluate_output(X,Y)))
       print(paste0("Finished -- ",100.0*i/dim(grid)[1]))
     }
     return(results)
@@ -35,10 +35,10 @@ simulate <- function(method,dataset,seed=123123,data_seed=123123){
     grid <- get_grid(method=method,dataset=dataset)
     results <- c()
     for(i in 1:dim(grid)[1]){
-      Y <- Rtsne(X,perplexity=grid[i,]$perplexity,
+      Y <- Rtsne::Rtsne(X,perplexity=grid[i,]$perplexity,
                  pca_center=grid[i,]$pca_center,
-                 pca_scale=grid[i,]$pca_scale)
-      results <- rbind(results,cbind(grid[i,],evaluate(X,Y)))
+                 pca_scale=grid[i,]$pca_scale)$Y
+      results <- rbind(results,cbind(grid[i,],evaluate_output(X,Y)))
       print(paste0("Finished -- ",100.0*i/dim(grid)[1]))
     }
     return(results)
@@ -67,7 +67,7 @@ evaluate_output <- function(high,low){
   h <- em$entropy
   mi <- em$mutual_info
   le <- local_error(high,low)
-  rk <- tryCatch({range_kept(high,low,n)},error=function(e){return(rankge_kept(high,low,(n-1)))})
+  rk <- tryCatch({spectral(high,low,n)},error=function(e){return(spectral(high,low,(n-1)))})
   spear <- spearman_rho(high,low)
   if(dim(high)[2]==dim(low)[2]){
     bayes <- my_procrust_dist(high,low,300)
@@ -76,8 +76,9 @@ evaluate_output <- function(high,low){
     bayes <- get_knn_res(low,num_groups = 16,group_sizes = 50)
   }
 
-  data_row <- matrix(c(kmax_val,qnx_val,h,mi,le,rk,spear,bayes),nrow=1)
-  return(data.frame(data_row))
+  data_row <- data.frame(matrix(c(kmax_val,qnx_val,h,mi,le,rk,spear,bayes),nrow=1))
+  colnames(data_row) <- c("Kmax","Qnx","Entropy","MutualInfo","LocalError","Spectral","Spearman","Bayes")
+  return(data_row)
 }
 
 get_grid <- function(method = "tsne", dataset = "two lines") {
