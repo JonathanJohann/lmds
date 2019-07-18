@@ -4,8 +4,8 @@ The **lmds** package implements local-multidimensional scaling [1] in C++ with a
 
 To install the package, run the following
 ```R
-install.packages(devtools)
-library(devtools)
+install.packages("devtools")
+library("devtools")
 devtools::install_github("JonathanJohann/lmds")
 
 ```
@@ -26,6 +26,8 @@ print(Y$X)
 metric <- lmds::spectral(X = X, Y = Y$X, n = n-1)
 print(metric)
 ```
+
+*Code was developed using R version 3.6.0*
 
 # References
 [1] Chen, Lisha, and Andreas Buja. "Local multidimensional scaling for nonlinear dimension reduction, graph drawing, and proximity analysis." Journal of the American Statistical Association 104.485 (2009): 209-219.
